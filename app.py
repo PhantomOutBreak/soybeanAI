@@ -22,6 +22,10 @@ def predict():
     if not file:
         return jsonify({"error": "No file uploaded"}), 400
 
+    mode = request.form.get("mode", "fast").lower()
+    if mode not in {"fast", "slow"}:
+        mode = "fast"
+
     # โหลดรูป
     img = image.load_img(BytesIO(file.read()), target_size=(224, 224))
     img_array = image.img_to_array(img) / 255.0
@@ -36,7 +40,8 @@ def predict():
 
     return jsonify({
         "prediction": prediction,
-        "percentages": percentages
+        "percentages": percentages,
+        "mode": mode
     })
 
 if __name__ == "__main__":
