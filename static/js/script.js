@@ -135,10 +135,18 @@ document.addEventListener("DOMContentLoaded", () => {
       summaryTableBody.innerHTML = "";
 
       Object.entries(data.percentages).forEach(([cls, pct]) => {
+        const width = Math.min(100, Math.max(0, pct));
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td class="p-2 border-b border-slate-200 dark:border-slate-700">${cls}</td>
-          <td class="p-2 border-b border-slate-200 dark:border-slate-700">${pct.toFixed(2)}%</td>
+          <td class="p-2 border-b border-slate-200 dark:border-slate-700">
+            <div class="flex items-center justify-between text-xs font-semibold text-slate-600 dark:text-slate-300">
+              <span>${pct.toFixed(2)}%</span>
+            </div>
+            <div class="mt-1 h-2 w-full rounded-full bg-slate-200 dark:bg-slate-800">
+              <div class="h-2 rounded-full bg-gradient-to-r from-sky-500 to-violet-500" style="width:${width}%"></div>
+            </div>
+          </td>
         `;
         summaryTableBody.appendChild(tr);
       });
