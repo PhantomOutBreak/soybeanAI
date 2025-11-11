@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const fileInput = document.querySelector('input[type="file"]');
+  const fileNameSpan = document.getElementById("fileName");
   const analyzeBtn = document.getElementById("analyzeBtn");
   const summaryTableBody = document.querySelector("#summaryTable tbody");
   const previewImg = document.getElementById("previewImg");
@@ -41,6 +42,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   fileInput.addEventListener("change", () => {
     const file = fileInput.files[0];
+
+    // --- 🌟 เริ่มส่วนที่เพิ่ม ---
+    // อัปเดตข้อความ "No file chosen"
+    if (file) {
+      fileNameSpan.textContent = file.name;
+    } else {
+      fileNameSpan.textContent = "No file chosen";
+    }
+
     if (!file) {
       previewImg.src = "";
       previewImg.classList.add("hidden");
@@ -72,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
   analyzeBtn.addEventListener("click", () => {
     const file = fileInput.files[0];
     if (!file) {
-      alert("กรุณาเลือกไฟล์ก่อน");
+      alert("Please upload an image first.");
       return;
     }
 
@@ -117,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
       stopAnalysisInterval();
       analyzeBtn.disabled = false;
       analyzeBtn.textContent = "Analyze";
-      alert("เกิดข้อผิดพลาดระหว่างอัปโหลด");
+      alert("An error occurred during upload. Please try again.");
     };
 
     xhr.onload = () => {
@@ -128,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const data = xhr.response;
       if (!data || data.error) {
-        alert(data?.error || "เกิดข้อผิดพลาดจากเซิร์ฟเวอร์");
+        alert(data?.error || "An error occurred on the server. Please try again.");
         return;
       }
 
@@ -151,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
         summaryTableBody.appendChild(tr);
       });
 
-      const modeLabel = data.mode === "slow" ? "โหมดละเอียด" : "โหมดเร็ว";
+      const modeLabel = data.mode === "slow" ? "Slow (Detailed)" : "Fast (Realtime)";
       resultDiv.textContent = `${modeLabel}: ${data.prediction}`;
     };
 

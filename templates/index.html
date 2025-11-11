@@ -86,7 +86,7 @@
         <div>
           <p class="inline-flex items-center gap-2 text-xs px-2.5 py-1.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">Demo version • No user data stored</p>
           <h1 class="mt-5 text-4xl/tight md:text-5xl/tight font-extrabold tracking-tight">
-            Select <strong class="bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">soybean seeds</strong> with AI
+            Select <strong class="bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">soybean seeds</strong> <span class="whitespace-nowrap">with AI</span>
           </h1>
           <p class="mt-4 text-slate-600 dark:text-slate-300 text-base md:text-lg max-w-prose">Upload images of seeds or trays, the system will simulate quality classification and defect detection results, show confidence scores and next-step recommendations.</p>
           <div class="mt-6 flex flex-wrap gap-3">
@@ -221,23 +221,36 @@
 
     <p id="fileHint" class="mt-3 font-medium">Choose an image file</p>
 
-    <input type="file" name="file" accept="image/*" required
-        id="fileInput"
-        class="mt-2 cursor-pointer rounded-xl bg-sky-600 text-white px-4 py-2 text-sm font-semibold hover:bg-sky-500" />
+    <div class="mt-2 flex items-center justify-center gap-3">
+      
+      <label for="fileInput" 
+             class="cursor-pointer rounded-xl bg-sky-600 text-white px-4 py-2 text-sm font-semibold hover:bg-sky-500 whitespace-nowrap">
+        Choose File
+      </label>
+
+      <span id="fileName" class="text-sm text-slate-500 dark:text-slate-400 truncate">
+        No file chosen
+      </span>
+
+      <input type="file" name="file" accept="image/*" required
+             id="fileInput" 
+             class="hidden" />
+    </div>
+    
     <p class="mt-2 text-xs text-slate-500">Supports JPG/PNG up to ~10MB</p>
 
     <div class="flex flex-col gap-3">
       <div class="text-left">
         <p class="text-sm font-medium text-slate-700 dark:text-slate-200">Model speed</p>
-        <p class="text-xs text-slate-500 dark:text-slate-400">เลือกโหมดวิเคราะห์ที่ต้องการ</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400">Select your desired analysis mode</p>
         <div class="mt-2 inline-flex rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 overflow-hidden" role="group" aria-label="Model speed selector">
           <button type="button" data-mode="fast"
             class="mode-btn px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-200 bg-white dark:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500">
-            เร็ว (Realtime)
+            Fast (Realtime)
           </button>
           <button type="button" data-mode="slow"
             class="mode-btn px-4 py-2 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500">
-            ช้า (ละเอียด)
+            Slow (Detailed)
           </button>
         </div>
         <input type="hidden" id="modelModeInput" name="mode" value="fast" />
