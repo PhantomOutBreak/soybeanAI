@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const analysisPercent = document.getElementById("analysisPercent");
   const modeButtons = document.querySelectorAll(".mode-btn");
   const modelModeInput = document.getElementById("modelModeInput");
+  const dropzone = document.getElementById("dropzone");
 
   const setProgress = (barEl, percentEl, value) => {
     const clamped = Math.min(100, Math.max(0, value));
@@ -39,6 +40,85 @@ document.addEventListener("DOMContentLoaded", () => {
       setModeButtonStyles(selectedMode);
     });
   });
+
+  // --- Drag and Drop Logic (Global) ---
+  if (dropzone) {
+    let dragCounter = 0;
+
+    ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+      document.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    document.addEventListener("dragenter", (e) => {
+      dragCounter++;
+      dropzone.classList.add("border-sky-500", "bg-sky-50", "dark:bg-sky-900/20");
+    }, false);
+
+    document.addEventListener("dragleave", (e) => {
+      dragCounter--;
+      if (dragCounter <= 0) {
+        dragCounter = 0;
+        dropzone.classList.remove("border-sky-500", "bg-sky-50", "dark:bg-sky-900/20");
+      }
+    }, false);
+
+    document.addEventListener("drop", (e) => {
+      dragCounter = 0;
+      dropzone.classList.remove("border-sky-500", "bg-sky-50", "dark:bg-sky-900/20");
+
+      const dt = e.dataTransfer;
+      const files = dt.files;
+
+      if (files && files.length > 0) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(files[0]);
+        fileInput.files = dataTransfer.files;
+        fileInput.dispatchEvent(new Event("change"));
+      }
+    }, false);
+  }
+
+  // --- Paste Logic (Global & Input) ---
+  const handlePaste = (e) => {
+    const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+    let imageFile = null;
+
+    for (let index in items) {
+      const item = items[index];
+      if (item.kind === 'file' && item.type.startsWith('image/')) {
+        imageFile = item.getAsFile();
+        break;
+      }
+    }
+
+    if (imageFile) {
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(imageFile);
+      fileInput.files = dataTransfer.files;
+      e.preventDefault(); // Prevent text from pasting if an image was found
+
+      const pasteInput = document.getElementById('pasteInput');
+      if (pasteInput) {
+        pasteInput.value = "Image pasted!";
+        setTimeout(() => pasteInput.value = "", 2000);
+      }
+
+      fileInput.dispatchEvent(new Event("change"));
+    }
+  };
+
+  document.addEventListener("paste", handlePaste);
+  const pasteInputEl = document.getElementById('pasteInput');
+  if (pasteInputEl) {
+    pasteInputEl.addEventListener("click", () => {
+      pasteInputEl.focus();
+    });
+  }
 
   fileInput.addEventListener("change", () => {
     const file = fileInput.files[0];
